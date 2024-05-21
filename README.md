@@ -135,7 +135,7 @@ ALTER TABLE Mahasiswa ADD CONSTRAINT FK_DosenWali FOREIGN KEY (kd_ds) REFERENCES
 **Keterangan :** `kd_ds` berhasil dihapus.
 
 ## Evaluasi dan Pertanyaan
-  * Tulis semua perintah-perintah SQL percobaan di atas beserta outputnya!
+Tulis semua perintah-perintah SQL percobaan di atas beserta outputnya!
 
 - Syntax SQL: **SQL dan Output sudah disertakan diatas**.
 
