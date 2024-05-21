@@ -1,7 +1,18 @@
-# Tugas Praktikum 3
+## Mata Kuliah
 
-## Script DDL berdasarkan skema ERD
-```sql
+Sebagai tugas praktikum: [3] Basis Data | Universitas Pelita Bangsa.
+
+## Laporan Praktikum
+
+- Bagian 1:
+
+  > Kode berdasarkan ERD yang ditanyakan.
+
+  <p align="left">
+    <img src="/ss/soal.jpg" width="500">
+  </p>
+
+```
 CREATE DATABASE praktikum3;
 USE praktikum3;
 
@@ -53,136 +64,92 @@ CREATE TABLE KRSMahasiswa (
 );
 ```
 
-### Tugas Praktikum 3
+**Output :**
+  <p align="left">
+    <img src="/ss/1.jpg" width="500">
+  </p>
+  <p align="left">
+    <img src="/ss/2.jpg" width="500">
+  </p>
+  
+- Bagian 2:
 
-#### 1. Lakukan penambahan data pada table mahasiswa dengan mengisi *kd_ds* yang belum ada pada data dosen.
-**Script :**
-```sql
+  > Menambah Record Dosen dan Mahasiswa.
+  
+```
+select * from Dosen;
 INSERT INTO Dosen (kd_ds, nama) VALUES
 ('DS001', 'Nurul'),
 ('DS002', 'Fauzan'),
 ('DS003', 'Oktavia'),
 ('DS004', 'Fajar'),
 ('DS005', 'Bayu');
-select * from Dosen;
 
+select * from Mahasiswa;
 INSERT INTO Mahasiswa (nim, nama, jenis_kelamin, tgl_lahir, jalan, kota, kodepos, no_hp, kd_ds) VALUES
 ('11223344', 'Nurul', 'Perempuan', '2005-07-14', NULL, 'Cikarang', NULL, NULL, 'DS001'),
 ('11223345', 'Fauzan', 'Laki-laki', '2005-11-16', NULL, 'Cikarang', NULL, NULL, 'DS002'),
 ('11223347', 'Oktavia Rizkha', 'Perempuan', '2002-01-02', NULL, 'Bekasi', NULL, NULL, 'DS003'),
 ('11223348', 'Fajar', 'Laki-laki', '2005-02-05', NULL, 'Bekasi', NULL, NULL, 'DS004'),
 ('11223349', 'Bayu', 'Laki-laki', '2005-03-10', NULL, 'Cikarang', NULL, NULL, 'DS005');
-select * from Mahasiswa;
 ```
+  
+- Bagian 3:
 
-#### 2. Hapus satu record data pada table dosen yang telah dirujuk pada tabel mahasiswa.
-```sql
+  > Menghapus Kode Dosen.
+  
+```
 DELETE FROM Dosen WHERE kd_ds = 'DS002';
 ```
 
 **Keterangan :** Terjadi ERROR dikarenakan `kd_ds` pada tabel Mahasiswa merupakan **FOREIGN KEY** dari tabel refensinya yaitu tabel Dosen. Dan pada tabel Dosen `kd_ds` merupakan **PRIMARY KEY**. Itu artinya, tabel Dosen sebagai tabel *parent/references* dan Mahasiswa sebagai tabel *child* maka dari itu saat menghapus satu record data pada tabel dosen terjadi error. 
+  
+- Bagian 4:
 
-#### 3. Ubah mode menjadi *ON UPDATE CASCADE ON DELETE RESTRICT*
-```sql
+  > Merubah Foreign Key untuk Kode Dosen agar bisa dirubah.
+  
+```
 ALTER TABLE Mahasiswa DROP FOREIGN KEY FK_DosenWali;
 ALTER TABLE Mahasiswa ADD CONSTRAINT FK_DosenMahasiswa FOREIGN KEY (kd_ds) REFERENCES Dosen(kd_ds) ON UPDATE CASCADE ON DELETE RESTRICT;
 ```
+  
+- Bagian 5:
 
-#### 4. Lakukan perubahan data pada table dosen *(kd_ds)*
-```sql
-UPDATE Dosen SET kd_ds = 'DS007' WHERE kd_ds = 'DS005';
+  > Menghapus baris Dosen berdasarkan Kode Dosen.
+  
 ```
-
-**Keterangan :** `kd_ds` dapat diubah dikarenakan sebelumnya menggunakan `ON UPDATE CASCADE`
-
-#### 5. Lakukan penghapusan data pada table dosen
-```sql
 DELETE FROM Dosen WHERE kd_ds = 'DS001';
 ```
 
 **Keterangan :** Terjadi ERROR dan `kd_ds` tidak dapat dihapus.
+  
+- Bagian 6:
 
-#### 6. Ubah mode menjadi *ON UPDATE CASCADE ON DELETE SET NULL*
-```sql
+  > Merubah Kondisi Kode Dosen agar bisa dirubah.
+  
+```
 ALTER TABLE Mahasiswa DROP FOREIGN KEY FK_DosenMahasiswa;
 ALTER TABLE Mahasiswa ADD CONSTRAINT FK_DosenWali FOREIGN KEY (kd_ds) REFERENCES Dosen(kd_ds) ON UPDATE CASCADE ON DELETE SET NULL;
 ```
 
-#### 7. Lakukan penghapusan data pada table dosen
-```sql
-DELETE FROM Dosen WHERE kd_ds = 'DS004';
-```
-
 **Keterangan :** `kd_ds` berhasil dihapus.
 
- ## Evaluasi dan Pertanyaan
+## Evaluasi dan Pertanyaan
   * Tulis semua perintah-perintah SQL percobaan di atas beserta outputnya!
 
-  ### Syntax SQL
+- Syntax SQL: **SQL dan Output sudah disertakan diatas**.
 
-  - Membuat foreign key
+- Apa bedanya penggunaan RESTRICT dan penggunaan CASCADE:
 
-    - Dalam ALTER TABLE:
-      ```SQL
-      ALTER TABLE mahasiswa
-      ADD CONSTRAINT fk_dosenwali FOREIGN KEY (kd_ds)     REFERENCES dosen(kd_ds)
-      ```
-    - Dalam CREATE TABLE:
-      ```sql
-      CREATE TABLE mahasiswa(
-      nim VARCHAR(10) NOT NULL,
-      nama VARCHAR(100) NOT NULL,
-      kd_ds VARCHAR(10),
-      PRIMARY KEY(nim),
-      CONSTRAINT fk_DosenWali FOREIGN KEY (kd_ds)
-      REFERENCES dosen(kd_ds)
-      );
-      ```
-
-    ```
-
-    ```
-
-  - Mengubah data
-    ```sql
-    UPDATE mahasiswa
-    SET kd_ds = 'DS011' WHERE nim = 112233445;
-    ```
-  - Menampilkan CREATE TABLE
-    ```sql
-    SHOW CREATE TABLE  mahasiswa;
-    ```
-  - Mode ON UPDATE CASCADE ON DELETE CASCADE
-    ```sql
-    ALTER TABLE mahasiswa
-    DROP FOREIGN KEY fk_mahasiswa_dosen,
-    ADD CONSTRAINT fk_dosenwali FOREIGN KEY (kd_ds) REFERENCES dosen(kd_ds) ON UPDATE CASCADE ON DELETE CASCADE;
-    ```
-  - Menghapus data
-    ```sql
-    DELETE FROM dosen WHERE kd_ds = 'DS001';
-    ```
-  - Mode ON UPDATE CASCADE ON DELETE NOT NULL
-    ```sql
-    ALTER TABLE <table>
-    DROP FOREIGN KEY <nama_constraint_lama>,
-    ADD CONSTRAINT <nama_constraint_baru> FOREIGN KEY (field) REFERENCES <table_references(filed_references)> ON UPDATE CASCADE ON DELETE NOT NULL;
-    ```
-  - Mengubah data
-    ```sql
-    UPDATE dosen
-    SET kd_ds = 'DS006' WHERE nama = 'Haha Hihi';
-    ```
-  - Menghapus data
-    ```sql
-    DELETE FROM dosen WHERE nim = 'DS003';
-      ```
-
-#### Apa bedanya penggunaan RESTRICT dan penggunaan CASCADE
 * **Restrict** = yaitu perubahan data dan penghapusan data tidak diijinkan pada tabel referensi (parent table) apabila pada tabel child sudah ada yang merujuk pada data tersebut.
 * **Cascade** = yaitu perubahan atau penghapusan data pada tabel referensi (parent table) akan diikuti oleh tabel child.
 
 Keduanya dapat ditambahkan pada action `ON UPDATE` dan `ON DELETE` selain itu, bisa juga digunakan action `SET NULL`.
 
-#### Berikan kesimpulan anda!
+- Berikan kesimpulan anda:
+
 Dalam kesimpulannya, **RESTRICT** dan **CASCADE** digunakan untuk mengatur perilaku ketika ada perubahan atau penghapusan data pada tabel utama. Jika digunakan dengan benar, ini dapat membantu memastikan integritas referensial dan konsistensi data antara tabel-tabel yang saling berhubungan.
+
+## Documentation
+
+All associated resources. are licensed under the [MIT License](https://mit-license.org/).
